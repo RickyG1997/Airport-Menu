@@ -1,13 +1,6 @@
 /* Ricardo Garcia
- [CS1101] Comprehensive Lab 1
- This work is to be done individually. It is not permitted to
- share, reproduce, or alter any part of this assignment for any
- purpose. Students are not permitted from sharing code, uploading
- this assignment online in any form, or viewing/receiving/
- modifying code written from anyone else. This assignment is part
- of an academic course at The University of Texas at El Paso and
- a grade will be assigned for the work produced individually by
- the student.
+ This program takes information from a flight txt file and creates a menu depending on the material provided
+ Also included is a list of frequent flyer codes who if entered correctly recieve a discount
  */
  
 import java.util.Scanner;
@@ -16,6 +9,7 @@ import java.io.File;
 public class CL1_Garcia{
 	public static void main(String []args){
 		try{
+			//creating file objects for both flights and frequent flyers
 			Scanner in = new Scanner (System.in);
 			File fileObj = new File ("Flight.txt");
 			Scanner scr = new Scanner (fileObj);
