@@ -1,0 +1,517 @@
+/* Ricardo Garcia
+This program allows the user to buy tickets, reserve rides, and buy food for the Ricky's Theme Park,
+the program also gives the user the chance to sign in or sign up to the park
+
+*/
+
+import java.util.Scanner;
+import java.io.File;
+
+public class CL2_Garcia {
+
+	public static void main(String[] args){
+		Scanner scr = new Scanner(System.in);
+		welcomingMessage();
+		int p = 3;
+		int Opp = 0;
+		if(authenticator()){
+			boolean in = signIn();
+			if(in){
+				displayMenu();
+			}
+			while(!in && p > 0){
+				System.out.println("you have " + p + " chance(s) left");
+				p--;
+				in = signIn();
+				if(in){
+					displayMenu();
+					p = 0;
+				}
+			}
+		}else{
+			System.out.println("Would you like to? (Yes or No)");
+			String a = scr.nextLine();
+			a = a.toUpperCase();
+			if(a.equals("YES")){
+				signUp();
+				displayMenu();
+			}else{
+				System.out.println(" ");
+				System.out.println("Proceeding to Menu");
+				displayMenu();
+			}
+		}
+	}
+
+	public static void welcomingMessage(){
+		//TODO
+		//This function displays a welcoming message.
+		System.out.println("****************************");
+		System.out.println("***Welcome To Ricky's Park****");
+		System.out.println("****************************");
+		System.out.println(" ");
+	}
+
+	public static boolean authenticator(){
+		//This function takes care of authentication (sign in/up).
+		Scanner scr = new Scanner(System.in);
+		System.out.println("Do you already have an account with us?(Yes or No)");
+		String a = scr.nextLine();
+		a = a.toUpperCase();
+		if(a.equals("YES")){
+			return true;
+		}else{
+			return false;
+		}
+
+	}
+
+	public static boolean signIn(){
+		//TODO
+		//The function takes care of sign in action.
+		boolean User = true;
+		try{
+			Scanner scr = new Scanner(System.in);
+			File fileObj = new File("Signin.txt");
+			Scanner InF = new Scanner(fileObj);
+			User = true;
+			System.out.println("Please enter your email address");
+			String a = scr.nextLine();
+			System.out.println("Please enter your password");
+			String b = scr.nextLine();
+			int i = 1;
+			int c = 0;
+			while(InF.hasNextLine() && i == 1){
+				String line = InF.nextLine();
+				String[] details = line.split(" ");
+				String A = details[0];
+				String B = details[1];
+				if(a.equals(A) && b.equals(B)){
+					User = true;
+					i = 0;
+					System.out.println("Signed in success fully");
+				}
+			}
+			if(i == 1){
+				User = false;
+				System.out.println("Wrong email adress or password");
+				return false;
+			}
+			return User;
+		}catch(Exception e){
+			System.out.println("Check code, error detected" + e);
+		}
+		return User;
+	}
+
+	public static boolean signUp(){
+		//TODO
+		//This function takes care of sign up action.
+		Scanner scr = new Scanner(System.in);
+		int i = 1;
+		int Conf = 0;
+		while(i == 1){
+			System.out.println("Please enter your email adress: ");
+			String UserN = scr.nextLine();
+			if(UserN.indexOf('@') == -1){
+				System.out.println("email adress not valid please try again");
+			}else{
+				i = 0;
+				Conf = 1;
+			}
+		}
+		i = 1;
+		while(i == 1 && Conf == 1){
+			System.out.println("Please create you password");
+			String PassW = scr.nextLine();
+			System.out.println("Please enter you password again: ");
+			String PassW2 = scr.nextLine();
+			if(passwordChecker(PassW)){
+				i = 0;
+				Conf = 2;
+				System.out.println("Password Valid");
+				System.out.println("Account Created");
+			}
+		}
+		if(Conf == 2){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	public static boolean passwordChecker(String password) {
+		//TODO
+		//This function checks the password requirements.
+		int r = 0;
+		boolean g = true;
+		if(hasLowerCase(password)){
+			r++;
+		}else{
+			System.out.println("Missing Lower Case");
+		}
+		if(hasUpperCase(password)){
+			r++;
+		}else{
+			System.out.println("Missing Upper Case");
+		}
+		if(hasDigit(password)){
+			r++;
+		}else{
+			System.out.println("Missing Digit");
+		}
+		if(hasSpecialChar(password)){
+			r++;
+		}else{
+			System.out.println("Missing Special Character");
+		}
+		if(hasEightChar(password)){
+			r++;
+		}else{
+			System.out.println("At least 8 characters");
+		}
+		if(r == 5){
+			g = true;
+		}
+		else{
+			g = false;
+		}
+		return g;
+	}
+
+	public static boolean hasLowerCase(String password) {
+		//TODO
+		//This function checks if the string has a lower case letter.
+		boolean b = false;
+		for (int i = 0; i < password.length(); i++){
+			char U = password.charAt(i);
+			if(U >= 'a' && U <= 'z')
+				b = true;
+		}
+		return b;
+	}
+
+	public static boolean hasUpperCase(String password) {
+		//TODO
+		//This function checks if the string has an upper case letter.
+		boolean b = false;
+		for (int i = 0; i < password.length(); i++){
+			char U = password.charAt(i);
+			if(U >= 'A' && U <= 'Z')
+				b = true;
+		}
+		return b;
+	}
+
+	public static boolean hasDigit(String password) {
+		//TODO
+		//This function checks if the string has a digit.
+		boolean b = false;
+		for (int i = 0; i < password.length(); i++){
+			char U = password.charAt(i);
+			if(U >= '0' && U <= '9')
+				b = true;
+		}
+		return b;
+	}
+
+	public static boolean hasSpecialChar(String password) {
+		//TODO
+		//This function checks if the string has a special character.
+		boolean d = false;
+		for(int i = 0; i < password.length(); i++){
+			if(password.charAt(i) == '!' || password.charAt(i) == '@' || password.charAt(i) == '#' || password.charAt(i) == '&' || password.charAt(i) == '%' || password.charAt(i) == '*'){
+				d = true;
+			}
+		}
+		return d;
+	}
+
+	public static boolean hasEightChar(String password) {
+		//TODO
+		//This function checks if the string has at least eight characters
+		int LenChar = password.length();
+		boolean Char;
+		if(LenChar < 8)
+			Char = false;
+		else
+			Char = true;
+
+		return Char;
+	}
+
+	public static void displayMenu() {
+		//TODO
+		// This function displays the options in the menu
+		try{
+			Scanner in = new Scanner (System.in);
+			File Ticket = new File ("TicketP.txt");
+			Scanner TickScr = new Scanner (Ticket);
+			File StateT = new File ("StateTax.txt");
+			Scanner STScr = new Scanner(StateT);
+			File FoodM = new File ("Food.txt");
+			Scanner FMScr = new Scanner(FoodM);
+
+			int Menu = 1;
+			double Balance = 0.00;
+			String Cart = "";
+			int TicQuan = 0;
+			int Res = 0;
+			String Time = "";
+
+			while(Menu == 1){
+				System.out.println(" ");
+				System.out.println("Please make a selection (1-7): ");
+				System.out.println("1) Buy a Ticket");
+				System.out.println("2) Reserve a Ride");
+				System.out.println("3) Food Menu");
+				System.out.println("4) Show your Orders");
+				System.out.println("5) Check Out");
+				System.out.println("6) Clear the Cart");
+				System.out.println("7) Exit Akbar Park");
+				int uChoice = in.nextInt();
+				System.out.println(" ");
+				switch(uChoice){
+					//Flight Menu
+					case 1:{
+						TickScr.nextLine();
+						System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+						System.out.println("|        ~~~ RICKY'S THEME PARK  ~~~               |");
+						System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+						System.out.println("|  TICKET + TIME       + PRICE FOR EACH +  DATE    |");
+						System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+						int TickNum = 0;
+
+						while(TickScr.hasNextLine()){
+							String line = TickScr.nextLine();
+							String[] details = line.split(" "); //line.split(",");
+							TickNum = TickNum + 1;
+							Time = details[0];
+							double Price = Double.parseDouble(details[1]);
+							String Date = details[2];
+							System.out.print("|");
+							System.out.format("%11s%13s%17s%10s", TickNum + " | ", Time + " | ", "$" + Price + " | ", Date + "|");
+							System.out.println(" ");
+							System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+						}
+
+						TickScr = new Scanner(Ticket);
+						in = new Scanner(System.in);
+						System.out.println("Please select the ticket you want (1 - " + TickNum + ") :");
+						int UC = in.nextInt();
+						TickScr.nextLine();
+						int c = 1;
+						Time = "";
+						double Price = 0.00;
+						String Date = "";
+
+						while(TickScr.hasNextLine() && c <= UC ){
+							String line = TickScr.nextLine();
+							String[] details = line.split(" ");
+							Time = details[0];
+							Price = Double.parseDouble(details[1]);
+							Date = details[2];
+							c++;
+						}
+						TickScr = new Scanner(Ticket);
+						in = new Scanner(System.in);
+
+						System.out.println("Are you a UTEP student, children, or adult? (s/c/a)");
+						String UserC = in.nextLine();
+						in = new Scanner(System.in);
+						System.out.println("How many Tickets will you be buying?");
+						TicQuan = in.nextInt();
+						Res = 0;
+						if(UserC.equals("s")){
+							Price = (Price - (Price * 0.08)) * TicQuan;
+							Balance = Balance + Price;
+							Res = 1;
+						}
+						if(UserC.equals("c")){
+							Price = (Price - (Price * 0.09)) * TicQuan;
+							Balance = Balance + Price;
+							Res = 2;
+						}
+						if(UserC.equals("a")){
+							Price = Price * TicQuan;
+							Balance = Balance + Price;
+							Res = 3;
+						}
+
+						String UserInfo = String.format("%25s%20s%20s", "Time : " + Time + " | "," Ticket Price: " + String.format("%.2f", Price) + " | ", "Date : " + Date);
+						Cart = Cart + "\n" + UserInfo;
+						System.out.println("Total Balance: $" + String.format("%.2f", Balance));
+					}
+					break;
+
+					case 2:{
+						if(Balance == 0.00){
+							System.out.println("Please purchase a ticket first before choosing option 2");
+						}else{
+							if(Res == 1){
+								System.out.println("Your " + Time + " ordered ticket(s) will be charged a reservation fee of $20.00 per Ticket");
+								Balance = Balance + (20.00 * TicQuan);
+								System.out.println("Total Balance: $" + String.format("%.2f", Balance));
+								Cart = Cart + "\n                  Reservation for ride has been made for $20.00 (Student)";
+							}
+							if(Res == 2){
+								System.out.println("Your " + Time + " ordered ticket(s) will be charged a reservation fee of $0.00");
+								System.out.println("Total Balance: $" + String.format("%.2f", Balance));
+								Cart = Cart + "\n                  Reservation for ride has been made for $0.00 (Child)";
+							}
+							if(Res == 3){
+								System.out.println("Your " + Time + " ordered ticket(s) will be charged a reservation fee of $30.00 per Ticket");
+								Balance = Balance + (30.00 * TicQuan);
+								System.out.println("Total Balance: $" + String.format("%.2f", Balance));
+								Cart = Cart + "\n                  Reservation for ride has been made for $30.00 (Adult)";
+							}
+						}
+					}
+					break;
+
+					case 3:{
+						if(Balance == 0.00){
+							System.out.println("Please purchase a ticket first before choosing option 3");
+						}else{
+							FMScr.nextLine();
+							System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+							System.out.println("|     ~~~ FOOD MENU  ~~~       |");
+							System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+							System.out.println("| FOOD ITEM      +    PRICE    |");
+							System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+
+							while(FMScr.hasNextLine()){
+								String line = FMScr.nextLine();
+								String[] details = line.split(" ");
+								String FName = details[0];
+								double FPrice = Double.parseDouble(details[1]);
+								System.out.print("|");
+								System.out.format("%18s%12s", FName + " | ", "$ " + FPrice + "|");
+								System.out.println(" ");
+								System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+							}
+
+							FMScr = new Scanner(FoodM);
+							in = new Scanner(System.in);
+							System.out.println("Please write the name of the Item you would like: ");
+							String UserFC = in.nextLine();
+							UserFC = UserFC.toUpperCase();
+							FMScr.nextLine();
+							int i = 1;
+							double FoodP = 0.00;
+							String FFC = "";
+
+							while(FMScr.hasNextLine() && i == 1){
+								String FoodMC = FMScr.next();
+								FoodMC = FoodMC.toUpperCase();
+								if(UserFC.equals(FoodMC)){
+									i = 0;
+									FoodMC = FoodMC.toLowerCase();
+									System.out.println("You have selected " + FoodMC + ", item has been added to your cart");
+									FFC = FoodMC;
+									FoodP = FMScr.nextDouble();
+									Balance = Balance + FoodP;
+									FMScr = new Scanner(FoodM);
+								}
+							}
+							System.out.println("Total Balance: $" + String.format("%.2f", Balance));
+							String UserFChoice = String.format("%35s%30s", "Food Item : " + FFC + "|", "Price: $" + FoodP);
+							Cart = Cart + "\n" + UserFChoice;
+						}
+					}
+					break;
+
+					case 4:{
+						if(Balance == 0.00){
+							System.out.println("Please purchase a ticket first before choosing option 4");
+						}else{
+							System.out.println(Cart);
+						}
+					}
+					break;
+
+					case 5:{
+						if(Balance == 0.00){
+							System.out.println("Please purchase a ticket first before choosing option 5");
+						}else{
+							STScr = new Scanner(StateT);
+							in = new Scanner(System.in);
+							System.out.println(Cart);
+							System.out.println("");
+							System.out.println("Your total before TAX is: $" + String.format("%.2f", Balance));
+							System.out.println("Please enter the state that you are currently in: (Texas, New-York, D.C.)");
+							String UState = in.nextLine();
+							UState = UState.toLowerCase();
+							STScr.nextLine();
+							int i = 1;
+
+							while(STScr.hasNextLine() && i == 1){
+								String DState = STScr.next();
+								DState = DState.toLowerCase();
+								if(UState.equals(DState)){
+									i = 0;
+									double TaxRate = STScr.nextDouble();
+									System.out.println("You tax rate is: " + TaxRate);
+									double PATAX = Balance + (Balance * TaxRate);
+									System.out.println("Your total after TAX is: $" + String.format("%.2f", PATAX));
+									in = new Scanner(System.in);
+									STScr = new Scanner(StateT);
+									System.out.println("Please enter a valid credit card number: ");
+									String u = in.nextLine();
+									boolean CardAu = isAllDigits(u);
+									if(CardAu == true){
+										System.out.println("Payment successful have a nice day");
+										Cart = "";
+										Balance = 0.00;
+										System.out.println("Your cart is now empty");
+									}else{
+										System.out.println("Payment unsuccessful please try again");
+									}
+								}
+							}
+						}
+					}
+					break;
+					case 6:{
+						if(Balance == 0.00){
+							System.out.println("Please purchase a ticket first before choosing option 6, your cart is currently empty");
+						}else{
+							in = new Scanner(System.in);
+							System.out.println("Are you sure you want to empty you whole cart? (Yes or no)");
+							String UCartEmp = in.nextLine();
+							UCartEmp = UCartEmp.toUpperCase();
+							if(UCartEmp.equals("YES")){
+								Cart = "";
+								Balance = 0.00;
+								System.out.println("Cart has been cleared");
+							}else{
+								System.out.println("Enjoy your shopping");
+							}
+						}
+					}
+					break;
+					case 7:{
+						System.out.println("Have a good day and keep coding!!!");
+						Menu = 0;
+					}
+					break;
+				}
+			}
+		}catch(Exception e){
+			System.out.println("Check code, error detected" + e);
+		}
+	}
+
+	public static boolean isAllDigits(String str) {
+		//TODO
+		//this function checks if the credit card number is all in digits.
+		boolean flag = true;
+		if(str.matches("[0-9]+") == true && str.length() == 16){
+			flag = true;
+		}else{
+			flag = false;
+		}
+		return flag;
+	}
+
+}
